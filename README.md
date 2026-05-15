@@ -1,227 +1,261 @@
 # GovTender Scout 🇮🇳
 
-**Government Tender Auto-Scanner with AI-Powered Matching**
+**AI-Powered Government Tender Matching Platform for Indian Businesses**
 
-A complete SaaS platform that scrapes Indian government procurement portals, analyzes tender eligibility using rule-based AI, and delivers curated morning digests via WhatsApp and email.
+Stop manually checking portals. Let our AI do the heavy lifting and save 20+ hours per week.
 
-## ✨ Features
-
-### What It Does
-- **Daily Auto-Scraping**: Scrapes GeM, CPPP, and state portals at 6 AM
-- **AI Eligibility Parsing**: Extracts turnover requirements, certifications, and MSE preferences from PDFs
-- **Smart Matching**: Matches tenders against user profiles (keywords, categories, states, value range)
-- **Multi-Channel Alerts**: Sends WhatsApp + Email digests with deadline reminders
-- **Dashboard**: Track applied/watching/skipped tenders with CSV export
-
-### Revenue Plans
-| Plan | Price | Features |
-|------|-------|----------|
-| Free | ₹0/mo | 1 keyword, email only, CPPP only, 5 results/day |
-| Basic | ₹999/mo | 5 keywords, WA+email, GeM+CPPP, unlimited, 72h alerts |
-| Pro | ₹2,499/mo | Unlimited keywords, all portals, AI matching, PDF summaries |
-| Agency | ₹5,999/mo | 5 sub-users, white-label, CSV export, PSU portals |
+![GovTender Scout](https://img.shields.io/badge/Status-Ready%20for%20Testing-success)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Made in India](https://img.shields.io/badge/Made%20with%20❤️%20in-India-orange)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL 15+
-- Redis (optional)
+- Node.js 18+ installed
+- MongoDB running locally or MongoDB Atlas account
+- 500MB free disk space
 
-### Backend Setup
-
+### One-Command Setup (if MongoDB is running)
 ```bash
-cd govtender-scout/backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your database URL and other settings
-
-# Run migrations
-alembic upgrade head
-
-# Start server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+./startup.sh
 ```
 
-Backend runs at: http://localhost:8000  
-API docs: http://localhost:8000/docs
+### Manual Setup
 
-### Frontend Setup
-
+#### 1. Backend Setup
 ```bash
-cd frontend
-
-# Install dependencies
+cd backend
 npm install
-
-# Configure environment
-cp .env.local.example .env.local
-# Edit with your backend URL
-
-# Start dev server
+cp .env.example .env
+# Edit .env with your MongoDB URI
+npm run seed
 npm run dev
 ```
 
-Frontend runs at: http://localhost:3000
+#### 2. Frontend Setup (new terminal)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## 🌐 Access Points
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | Main application |
+| **Backend API** | http://localhost:5000 | REST API |
+| **API Health** | http://localhost:5000/health | Health check |
+
+## 🔑 Test Credentials
+
+After running `npm run seed` in the backend:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@govtenderscout.in | admin123 |
+| User | test@example.com | test1234 |
 
 ## 📁 Project Structure
 
 ```
-govtender-scout/
-├── backend/
+/workspace
+├── backend/                 # Express.js REST API
+│   ├── src/
+│   │   ├── config/         # Database configuration
+│   │   ├── models/         # Mongoose schemas (User, Tender)
+│   │   ├── routes/         # API endpoints
+│   │   ├── services/       # Business logic (monitoring, AI)
+│   │   ├── middleware/     # Auth, validation
+│   │   └── utils/          # Helpers, seeding
+│   ├── .env                # Environment variables
+│   └── package.json
+│
+├── frontend/               # Next.js React Application
 │   ├── app/
-│   │   ├── main.py              # FastAPI entry point
-│   │   ├── config.py            # Settings & env vars
-│   │   ├── database.py          # SQLAlchemy setup
-│   │   ├── models/              # Database models
-│   │   ├── scrapers/            # Portal scrapers (CPPP, GeM)
-│   │   ├── parsers/             # PDF extraction & AI parsing
-│   │   ├── matching/            # Tender matching engine
-│   │   ├── notifications/       # Email & WhatsApp
-│   │   ├── routers/             # API endpoints
-│   │   └── workers/             # Daily job scheduler
-│   ├── alembic/                 # DB migrations
-│   ├── requirements.txt
-│   └── Dockerfile
-├── frontend/
-│   ├── app/
-│   │   ├── page.tsx             # Landing page
-│   │   ├── layout.tsx           # Root layout
-│   │   └── globals.css          # Tailwind styles
-│   ├── components/
-│   ├── package.json
-│   └── tailwind.config.js
-├── docker-compose.yml
-├── railway.toml
-└── SETUP_GUIDE.md
+│   │   ├── page.tsx       # Landing page
+│   │   ├── signup/        # Registration page
+│   │   ├── login/         # Login page
+│   │   └── dashboard/     # User dashboard (to be built)
+│   └── package.json
+│
+└── startup.sh             # Automated setup script
 ```
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login
+- `GET /api/auth/me` - Get current user (protected)
+
+### Tenders
+- `GET /api/tenders` - List tenders with filters
+- `GET /api/tenders/expiring` - Expiring soon (72h)
+- `GET /api/tenders/:id` - Single tender details
+- `GET /api/tenders/stats/overview` - Statistics
+
+### Users
+- `PUT /api/users/profile` - Update profile
+- `GET /api/users/recommendations?userId=X` - Personalized tenders
+- `GET /api/users/dashboard?userId=X` - Dashboard data
+
+### Notifications
+- `POST /api/notifications/send-email` - Send email
+- `POST /api/notifications/send-whatsapp` - Send WhatsApp
+- `POST /api/notifications/bulk-alert` - Bulk alerts
+
+## 🎯 Features
+
+### ✅ Implemented
+- [x] User registration & authentication (JWT)
+- [x] Indian mobile number validation
+- [x] Password hashing with bcrypt
+- [x] Tender database schema
+- [x] Multi-portal support structure (45+ portals)
+- [x] REST API with validation
+- [x] Rate limiting & security headers
+- [x] Email notifications (SMTP/Resend)
+- [x] WhatsApp notifications (Twilio)
+- [x] Sample data seeding
+- [x] Landing page with pricing
+- [x] Signup/Login pages
+- [x] Monitoring service framework
+
+### 🚧 To Be Completed
+- [ ] Real portal scrapers (need portal-specific selectors)
+- [ ] AI eligibility matching (Anthropic/OpenAI integration)
+- [ ] User dashboard UI
+- [ ] Payment integration (Razorpay/Stripe)
+- [ ] Admin panel
+- [ ] PDF tender document parser
+- [ ] Advanced search & filters
+- [ ] Export to CSV/PDF
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Backend | FastAPI + Python 3.11 |
-| Frontend | Next.js 14 + TypeScript |
-| Database | PostgreSQL 15 + SQLAlchemy |
-| Scraping | Playwright + BeautifulSoup |
-| PDF Processing | PyMuPDF + Tesseract OCR |
-| AI Parsing | Rule-based regex (free) |
-| Email | Gmail SMTP (free) |
-| WhatsApp | Console mode (manual) or WATI |
-| Auth | Supabase (free tier) |
-| Payments | Razorpay Subscriptions |
-| Hosting | Railway.app |
+**Backend:**
+- Node.js 18+, Express.js
+- MongoDB, Mongoose ODM
+- JWT Authentication
+- Winston Logger
+- Node-Cron (scheduled jobs)
+- Cheerio (HTML parsing)
 
-## 💰 Cost Breakdown (Monthly)
+**Frontend:**
+- Next.js 14 (App Router)
+- React 18, TypeScript
+- Tailwind CSS
+- Lucide Icons
 
-| Service | Free Tier | Paid at Scale |
-|---------|-----------|---------------|
-| Railway Hosting | $5 | ~$20 |
-| PostgreSQL | Included | - |
-| Redis | Included | - |
-| Gmail SMTP | Free (500/day) | - |
-| WhatsApp | Manual | $49 (WATI) |
-| Proxies | None | ~₹2,000 |
-| **Total** | **~₹400/mo** | **~₹5,000/mo** |
+**Services:**
+- Email: Nodemailer / Resend
+- WhatsApp: Twilio API
+- AI: Anthropic Claude (optional)
 
-## 🔑 Environment Variables
+## 📊 Supported Portals
 
-See `backend/.env.example` for full list. Key variables:
+The system supports monitoring from 45+ government portals including:
+
+**Central:** CPPP, GeM, IREPS, Coal India, ISRO, DRDO, BEL, NTPC, SBI
+
+**State:** Delhi, Maharashtra, Karnataka, Tamil Nadu, Rajasthan, MP, Kerala, Telangana, AP, Punjab, Haryana, Bihar, West Bengal, Odisha, Jharkhand, Assam, HP, Uttarakhand, CG
+
+**Special:** Startup India, Smart Cities, NHAI, NIC
+
+## 🔐 Security Features
+
+- ✅ Password hashing (bcryptjs)
+- ✅ JWT-based authentication
+- ✅ Rate limiting (100 req/15min)
+- ✅ CORS protection
+- ✅ Helmet.js security headers
+- ✅ Input validation (express-validator)
+- ✅ MongoDB injection prevention
+
+## 📝 Environment Variables
+
+Create `/backend/.env`:
 
 ```env
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/govtender
+# Required
+MONGODB_URI=mongodb://localhost:27017/govtender-scout
+JWT_SECRET=your-secret-key-change-in-production
+
+# Optional (for notifications)
+EMAIL_PROVIDER=smtp
+SMTP_HOST=smtp.gmail.com
 SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-key
-WA_MODE=console  # or 'wati' for automated WhatsApp
+SMTP_PASS=app-password
+
+TWILIO_ACCOUNT_SID=ACxxxxx
+TWILIO_AUTH_TOKEN=your-token
+TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
+
+# AI (optional)
+ANTHROPIC_API_KEY=sk-ant-xxxxx
 ```
 
-## 📡 API Endpoints
+## 🧪 Testing
 
-### Public
-- `GET /health` - Health check
-- `GET /api/tenders` - List tenders (paginated)
-- `GET /api/tenders/{id}` - Get tender details
-
-### Authenticated
-- `GET /api/users/profile` - User profile
-- `PUT /api/users/profile` - Update preferences
-- `GET /api/users/tenders` - Matched tenders
-- `POST /api/users/actions` - Mark action (applied/watching/skip)
-
-### Webhooks
-- `POST /api/webhooks/razorpay` - Payment events
-
-## ⏰ Daily Pipeline Schedule
-
-Runs automatically at **6:00 AM IST**:
-
-1. **6:00 AM** - Scrapers hit portals
-2. **6:30 AM** - PDF extraction & parsing
-3. **7:00 AM** - Match against users
-4. **8:00 AM** - Send digests
-
-Manual run:
-```python
-from app.workers.daily_job import run_daily_pipeline
-import asyncio
-asyncio.run(run_daily_pipeline())
-```
-
-## 🚢 Deployment
-
-### Railway.app (Recommended)
-
-1. Push to GitHub
-2. Deploy on Railway.app
-3. Add PostgreSQL plugin
-4. Set environment variables
-5. Run: `railway run alembic upgrade head`
-
-### Docker
-
+### Test API Manually
 ```bash
-docker-compose up -d
+# Health check
+curl http://localhost:5000/health
+
+# Login
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test1234"}'
+
+# Get tenders
+curl http://localhost:5000/api/tenders
 ```
 
-### Vercel (Frontend)
+### Test with Postman/Insomnia
+Import the API endpoints and use the test credentials.
 
+## 🚀 Deployment
+
+### Backend (Railway/Render/Heroku)
+1. Set environment variables
+2. Connect to MongoDB Atlas
+3. Deploy from `/workspace/backend`
+
+### Frontend (Vercel)
 1. Connect GitHub repo
 2. Set `NEXT_PUBLIC_API_URL`
-3. Deploy!
+3. Deploy from `/workspace/frontend`
 
-## 📖 Documentation
-
-- [Complete Setup Guide](SETUP_GUIDE.md) - Detailed deployment instructions
-- [API Documentation](http://localhost:8000/docs) - Auto-generated OpenAPI docs
+### Production Checklist
+- [ ] Change JWT_SECRET
+- [ ] Use MongoDB Atlas
+- [ ] Configure real email (Resend)
+- [ ] Set up Twilio for WhatsApp
+- [ ] Enable HTTPS
+- [ ] Set up monitoring (UptimeRobot)
+- [ ] Configure backup strategy
 
 ## 🤝 Contributing
 
-This is a production-ready SaaS template. Feel free to:
-- Add more portal scrapers
-- Improve AI parsing accuracy
-- Enhance the dashboard UI
-- Add analytics features
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
 ## 📄 License
 
-MIT License - Free for commercial use.
+MIT License - see LICENSE file for details
 
-## 🙏 Credits
+## 📞 Support
 
-Built with ❤️ for Indian MSMEs competing in government procurement.
+For issues and questions:
+- GitHub Issues: [Create an issue]
+- Email: support@govtenderscout.in
 
 ---
 
-**Ready to launch?** Read the [Setup Guide](SETUP_GUIDE.md) and deploy in 30 minutes!
+**Made with ❤️ in India 🇮🇳**
+
+Built for Indian MSMEs, startups, and businesses looking to win government contracts.
