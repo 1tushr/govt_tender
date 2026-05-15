@@ -84,3 +84,5 @@ alembic_version/
 ehthumbs.db
 Thumbs.db
 ```
+# Ignore frontend dependencies
+/frontend/node_modules
