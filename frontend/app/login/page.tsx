@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff, ArrowLeft, CheckCircle, Lock } from 'lucide-react';
+import { supabase } from '../../lib/supabaseClient';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,11 +40,19 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+
     setIsLoading(false);
+
+    if (error) {
+      setErrors(prev => ({ ...prev, email: error.message }));
+      return;
+    }
+
+    // Successfully signed in
     alert('Login successful! Redirecting to dashboard...');
   };
 
@@ -72,7 +81,7 @@ export default function LoginPage() {
         </Link>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8 text-gray-900">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
             <p className="text-gray-600 mt-2">Sign in to continue finding tenders</p>
