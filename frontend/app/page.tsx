@@ -55,8 +55,8 @@ const pricingPlans = [
 const features = [
   {
     icon: Zap,
-    title: 'Daily Auto-Scanning',
-    description: 'We scrape GeM, CPPP, and state portals every morning at 6 AM so you don\'t have to.',
+    title: 'Daily Auto-Monitoring',
+    description: 'We monitor GeM, CPPP, and state portals every morning at 6 AM so you don\'t have to.',
   },
   {
     icon: Shield,
@@ -196,12 +196,12 @@ export default function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               How GovTender Scout Works
             </h2>
-            <p className="text-xl text-gray-600">From scraping to your inbox in 4 simple steps</p>
+            <p className="text-xl text-gray-600">From monitoring to your inbox in 4 simple steps</p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-8">
             {[
-              { step: '1', time: '6:00 AM', title: 'We Scrape', desc: 'Our bots scan GeM, CPPP, and 15+ state portals' },
+              { step: '1', time: '6:00 AM', title: 'We Monitor', desc: 'Our system checks GeM, CPPP, and 15+ state portals' },
               { step: '2', time: '6:30 AM', title: 'AI Analysis', desc: 'Claude AI reads PDFs and extracts eligibility criteria' },
               { step: '3', time: '7:00 AM', title: 'Smart Matching', desc: 'Your profile is matched against new tenders' },
               { step: '4', time: '8:00 AM', title: 'You Get Alerts', desc: 'WhatsApp + email digest with qualified tenders' },
