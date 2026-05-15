@@ -1,41 +1,86 @@
 ```
 # Dependencies
-venv/
 .venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-node_modules/
+.Python
+env/
+env.bak/
+venv.bak/
 
 # Build artifacts
-dist/
 build/
-target/
+dist/
 *.egg-info/
+.sass-cache/
+.wafpickle-*
+.coverage
+coverage/
+htmlcov/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment variables
 .env
 .env.local
-*.env.*
+.env.*
+.env~*
 
 # IDE specific
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
-
-# OS generated files
+*~
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
 # Python specific
+__pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Docker
+.dockerenv
+.dockerinit
+
+# Alembic
+alembic_version/
+
+# Database
+*.db
+*.db-journal
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 ```
